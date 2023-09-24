@@ -1,2 +1,1 @@
-# Voice-Control-Music-Player
-	Voice controlled music player is an advance audio player android application which is developed to enhance your music listening and interaction experience with mobile application .However, despite the numerous Music player mobile apps available, user-friendly interfaces , attractive run-time animations and hand free app navigation control make its differ from others . 
+
