@@ -1,5 +1,6 @@
 package com.giriloknath4.musicplayer;
 
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -164,7 +165,7 @@ private static final String ACCESS_KEY = "RMrVGt9VecjKf+qDziomneZlkGP92Yxeospv/5
         progressView = findViewById(R.id.progressView);
         durationView = findViewById(R.id.durationView);
 
-        //blur image view
+        //blur image view as the background of playing screen
         blurImageView = findViewById(R.id.blurImageView);
 
         // Bind Player Service and do every thing after the binding
