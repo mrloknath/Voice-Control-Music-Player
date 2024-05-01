@@ -46,7 +46,6 @@ public class PlayerService extends Service {
         return serviceBinder;
     }
 
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -112,8 +111,6 @@ public class PlayerService extends Service {
             startForeground(notificationId, notification);
         }
     };
-
-
 
 
 
