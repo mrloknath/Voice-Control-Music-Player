@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.giriloknath4.musicplayer.app-mergeDebugResources-35:/values-ldltr-v21/values-ldltr-v21.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\LOKNATH GIRI\\.gradle\\caches\\8.14.3\\transforms\\f7fdd79c5e42b3e46088d1d6cd476aa4\\transformed\\appcompat-1.7.0\\res\\values-ldltr-v21\\values-ldltr-v21.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "112",
+                        "endOffsets": "163"
+                    }
+                }
+            ]
+        }
+    ]
+}
