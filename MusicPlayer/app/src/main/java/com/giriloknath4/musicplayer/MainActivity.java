@@ -13,6 +13,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
+import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,6 +28,7 @@ import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
@@ -39,6 +41,8 @@ import android.speech.tts.TextToSpeech;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowInsetsController;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
@@ -77,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
     SongAdapter songAdapter;
     List<Song> allSongs = new ArrayList<>();
     ActivityResultLauncher<String> storagePermissionLauncher;
-    final String permission = Manifest.permission.READ_EXTERNAL_STORAGE;
+    String permission = Manifest.permission.READ_EXTERNAL_STORAGE;
     //--------------------------------player activity----------------------------
     ExoPlayer player;
     ConstraintLayout playerView;
@@ -115,31 +119,85 @@ private static final String ACCESS_KEY = "RMrVGt9VecjKf+qDziomneZlkGP92Yxeospv/5
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // save the status color
-        defaultStatusColor = getWindow().getStatusBarColor();
-        //set the navigation color
-        getWindow().setNavigationBarColor(ColorUtils.setAlphaComponent(defaultStatusColor,199)); // 0 & 255
-        
-        // set the tool bar , and app title
+        initStatusAndNavigationBar();
+        initToolbar();
+        initViews();
+        initPermissions();
+        initServiceBinding();
+        initButtons();
+        initTextToSpeech();
+    }
+
+    private void initStatusAndNavigationBar() {
+
+        Window window = getWindow();
+        // -------------------------------
+        // ANDROID 11+ (R = API 30)
+        // -------------------------------
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+
+            // Make the content draw behind system bars
+            window.setDecorFitsSystemWindows(false);
+
+            // Transparent status bar
+            window.setStatusBarColor(Color.TRANSPARENT);
+
+            // Semi-transparent navigation bar (your logic preserved)
+            defaultStatusColor = window.getNavigationBarColor();
+            int navColor = ColorUtils.setAlphaComponent(defaultStatusColor, 199);
+            window.setNavigationBarColor(navColor);
+
+            // Control icons (light/dark)
+            WindowInsetsController controller = window.getInsetsController();
+            if (controller != null) {
+                controller.setSystemBarsAppearance(
+                        WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS |
+                                WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS,
+                        WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS |
+                                WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS
+                );
+            }
+
+            return;
+        }
+
+        // -------------------------------
+        // ANDROID 8 – ANDROID 10
+        // -------------------------------
+        View decor = window.getDecorView();
+
+        decor.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+        );
+
+        // Transparent status bar
+        window.setStatusBarColor(Color.TRANSPARENT);
+
+        // Semi-transparent navigation bar (your logic preserved)
+        defaultStatusColor = window.getNavigationBarColor();
+        int navColor = ColorUtils.setAlphaComponent(defaultStatusColor, 199);
+        window.setNavigationBarColor(navColor);
+
+        // Light/Dark icons using compat
+        WindowInsetsControllerCompat controllerCompat =
+                new WindowInsetsControllerCompat(window, decor);
+
+        controllerCompat.setAppearanceLightStatusBars(true);
+        controllerCompat.setAppearanceLightNavigationBars(true);
+    }
+
+
+    private void initToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setTitle(getResources().getString(R.string.app_name));
-        
-        // recyclerview
+        Objects.requireNonNull(getSupportActionBar())
+                .setTitle(getResources().getString(R.string.app_name));
+    }
+    private void initViews() {
+
         recyclerView = findViewById(R.id.recyclerview);
-        storagePermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted->{
-            if(granted){
-                fetchSongs();
-
-            }
-            else {
-                userResponse();
-            }
-        });
-
-        // Here launch storage permission
-        storagePermissionLauncher.launch(permission);
-
 
         playerView = findViewById(R.id.playerView);
         playerCloseBtn = findViewById(R.id.playerCloseBtn);
@@ -160,71 +218,88 @@ private static final String ACCESS_KEY = "RMrVGt9VecjKf+qDziomneZlkGP92Yxeospv/5
         artworkWrapper = findViewById(R.id.artworkWrapper);
         seekbarWrapper = findViewById(R.id.seekbarWrapper);
         controlWrapper = findViewById(R.id.controlWrapper);
+
         artworkView = findViewById(R.id.artworkView);
+        blurImageView = findViewById(R.id.blurImageView);
+
         seekbar = findViewById(R.id.seekbar);
         progressView = findViewById(R.id.progressView);
         durationView = findViewById(R.id.durationView);
 
-        //blur image view as the background of playing screen
-        blurImageView = findViewById(R.id.blurImageView);
-
-        // Bind Player Service and do every thing after the binding
-        doBindService();
-
-        //-----------------------initialize button and visibility---------------------------
         btnStart = findViewById(R.id.btnStart);
-        btnStart.setVisibility(View.VISIBLE);
-        btnStop  = findViewById(R.id.btnStop);
-        btnStop.setVisibility(View.GONE);
-
+        btnStop = findViewById(R.id.btnStop);
         textView = findViewById(R.id.textView);
 
-        btnStart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!hasRecordPermission()){
-                    requestRecordPermission();
-                }
-                else {
-                    btnStart.setVisibility(View.GONE);
-                    btnStop.setVisibility(View.VISIBLE);
-                    startPorcupine();
-                    Toast.makeText(MainActivity.this, "Start", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        btnStart.setVisibility(View.VISIBLE);
+        btnStop.setVisibility(View.GONE);
+    }
+    private void initPermissions() {
 
-        btnStop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(porcupineManager != null) {
-                    btnStart.setVisibility(View.VISIBLE);
-                    btnStop.setVisibility(View.GONE);
-                    Toast.makeText(MainActivity.this, "Stop", Toast.LENGTH_SHORT).show();
-                    stopPorcupine();
-                }
-            }
-        });
+        // 1. Decide permission based on Android version
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permission = Manifest.permission.READ_MEDIA_AUDIO;
+        } else {
+            permission = Manifest.permission.READ_EXTERNAL_STORAGE;
+        }
 
-        //------------------------text to speech------------------------------------------
-        textToSpeech=new TextToSpeech(this, new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int i) {
-                if (i != TextToSpeech.ERROR)
-                {
-                    textToSpeech.setLanguage(Locale.CHINESE);
-                }
+        // 2. Initialize launcher
+        storagePermissionLauncher =
+                registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
+                    if (granted) {
+                        fetchSongs();   // load songs
+                    } else {
+                        userResponse(); // show dialog / toast
+                    }
+                });
 
-            }
-        });
+        // 3. Ask permission only if not already granted
+        if (ContextCompat.checkSelfPermission(this, permission)
+                != PackageManager.PERMISSION_GRANTED) {
 
-        
+            // request
+            storagePermissionLauncher.launch(permission);
+
+        } else {
+            // already granted
+            fetchSongs();
+        }
     }
 
-    private void doBindService() {
-        Intent playerServiceIntent = new Intent(this,PlayerService.class);
+
+    private void initServiceBinding() {
+    Intent playerServiceIntent = new Intent(this,PlayerService.class);
         bindService(playerServiceIntent,playerServiceConnection, Context.BIND_AUTO_CREATE);
     }
+    private void initButtons() {
+
+        btnStart.setOnClickListener(v -> {
+            if (!hasRecordPermission()) {
+                requestRecordPermission();
+            } else {
+                btnStart.setVisibility(View.GONE);
+                btnStop.setVisibility(View.VISIBLE);
+                startPorcupine();
+                Toast.makeText(this, "Start", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btnStop.setOnClickListener(v -> {
+            if (porcupineManager != null) {
+                btnStart.setVisibility(View.VISIBLE);
+                btnStop.setVisibility(View.GONE);
+                stopPorcupine();
+                Toast.makeText(this, "Stop", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void initTextToSpeech() {
+        textToSpeech = new TextToSpeech(this, i -> {
+            if (i != TextToSpeech.ERROR) {
+                textToSpeech.setLanguage(Locale.CHINESE);
+            }
+        });
+    }
+
 
     ServiceConnection playerServiceConnection = new ServiceConnection() {
         @Override
@@ -576,72 +651,81 @@ private static final String ACCESS_KEY = "RMrVGt9VecjKf+qDziomneZlkGP92Yxeospv/5
     }
 
     private void fetchSongs() {
-        // define a list to carry songs
+
         List<Song> songs = new ArrayList<>();
         Uri mediaStoreUri;
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+        // Android Q and above uses volume-based URIs
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             mediaStoreUri = MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL);
-        }
-        else{
+        } else {
             mediaStoreUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         }
 
-        //define projection
-        String[] projection = new String[]{
+        // Projections = columns you want to fetch
+        String[] projection = {
                 MediaStore.Audio.Media._ID,
                 MediaStore.Audio.Media.DISPLAY_NAME,
                 MediaStore.Audio.Media.DURATION,
                 MediaStore.Audio.Media.SIZE,
-                MediaStore.Audio.Media.ALBUM_ID,
+                MediaStore.Audio.Media.ALBUM_ID
         };
 
-        //Order
+        // ⭐ BEST FILTER → RETURNS ALL MUSIC FILES
+        String selection = MediaStore.Audio.Media.IS_MUSIC + "!= 0";
+
+        // Sort by recently added
         String sortOrder = MediaStore.Audio.Media.DATE_ADDED + " DESC";
 
-        // get the songs
-        try(Cursor cursor = getContentResolver().query(mediaStoreUri,projection,null,null,sortOrder)){
-            // cache cursor indices
+        try (Cursor cursor = getContentResolver().query(
+                mediaStoreUri,
+                projection,
+                selection,
+                null,
+                sortOrder
+        )) {
+            if (cursor == null) return;
+
             int idColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID);
             int nameColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME);
             int durationColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION);
             int sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE);
             int albumIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID);
 
-            //clear the previous loaded before adding loading again
-            while(cursor.moveToNext()){
-                //get the values of a column for a given audio file
+            while (cursor.moveToNext()) {
+
                 long id = cursor.getLong(idColumn);
                 String name = cursor.getString(nameColumn);
                 int duration = cursor.getInt(durationColumn);
-                int size = cursor.getInt(sizeColumn);
+                long size = cursor.getLong(sizeColumn);
                 long albumId = cursor.getLong(albumIdColumn);
 
-                // song uri
-                Uri uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,id);
+                // file Uri
+                Uri songUri = ContentUris.withAppendedId(
+                        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id
+                );
 
-                //album art work uri
-                Uri albumArtworkUri = ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"),albumId);
+                // album artwork Uri
+                Uri artworkUri = ContentUris.withAppendedId(
+                        Uri.parse("content://media/external/audio/albumart"), albumId
+                );
 
-                // remove .mp3 extension from the songs name
-                name = name.substring(0,name.lastIndexOf("."));
+                // Remove extension like .mp3 or .m4a safely
+                if (name.contains(".")) {
+                    name = name.substring(0, name.lastIndexOf("."));
+                }
 
-                // song item
-                Song song = new Song(name,uri,albumArtworkUri,size,duration);
-
-                // add songs item to songs list
-                songs.add(song);
+                songs.add(new Song(name, songUri, artworkUri, size, duration));
             }
 
-            //display songs
             showSongs(songs);
-
         }
     }
 
+
     private void showSongs(List<Song> songs) {
 
-        if(songs.size() == 0){
+        if(songs.isEmpty()){
             Toast.makeText(this, "No Songs", Toast.LENGTH_SHORT).show();
             return;
         }

@@ -7,12 +7,12 @@ public class Song {
     String title;
     Uri uri;
     Uri artworkUri;
-    int size;
+    long size;
     int duration;
 
     //constructor
 
-    public Song(String title, Uri uri, Uri artworkUri, int size, int duration) {
+    public Song(String title, Uri uri, Uri artworkUri, long size, int duration) {
         this.title = title;
         this.uri = uri;
         this.artworkUri = artworkUri;
@@ -34,11 +34,33 @@ public class Song {
         return artworkUri;
     }
 
-    public int getSize() {
+    public long getSize() {
         return size;
     }
 
     public int getDuration() {
         return duration;
+    }
+
+    //setters
+
+    public void setTitle(String title) {
+        this.title=title;
+    }
+
+    public void setUri(Uri uri) {
+        this.uri=uri;
+    }
+
+    public void setArtworkUri(Uri artworkUri) {
+        this.artworkUri=artworkUri;
+    }
+
+    public void setSize(long size) {
+        this.size=size;
+    }
+
+    public void setDuration(int duration) {
+        this.duration=duration;
     }
 }

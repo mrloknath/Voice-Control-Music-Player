@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.giriloknath4.musicplayer.app-mergeDebugResources-35:/values-v21/values-v21.xml",
+            "outputFile": "com.giriloknath4.musicplayer.app-mergeDebugResources-38:/values-v21/values-v21.xml",
             "map": [
                 {
                     "source": "C:\\Users\\LOKNATH GIRI\\.gradle\\caches\\8.14.3\\transforms\\f7fdd79c5e42b3e46088d1d6cd476aa4\\transformed\\appcompat-1.7.0\\res\\values-v21\\values-v21.xml",
@@ -23,7 +23,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\LOKNATH GIRI\\.gradle\\caches\\8.14.3\\transforms\\6e513427e17d56f83cdf086a0ec01798\\transformed\\jetified-exoplayer-ui-2.18.6\\res\\values-v21\\values-v21.xml",
+                    "source": "C:\\Users\\LOKNATH GIRI\\.gradle\\caches\\8.14.3\\transforms\\b808ced7e2a15711d32adfa4255ab265\\transformed\\jetified-exoplayer-ui-2.19.1\\res\\values-v21\\values-v21.xml",
                     "from": {
                         "startLines": "2,3",
                         "startColumns": "4,4",
