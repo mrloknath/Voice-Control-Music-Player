@@ -689,8 +689,8 @@ public class MainActivity extends AppCompatActivity {
                 MediaStore.Audio.Media.ALBUM_ID
         };
 
-        // ⭐ BEST FILTER → RETURNS ALL MUSIC FILES
-        String selection = MediaStore.Audio.Media.IS_MUSIC + "!= 0";
+        // ⭐ BEST FILTER → RETURNS ALL AUDIO FILES WITH SIZE > 0
+        String selection = MediaStore.Audio.Media.SIZE + " > 0";
 
         // Sort by recently added
         String sortOrder = MediaStore.Audio.Media.DATE_ADDED + " DESC";
