@@ -10,24 +10,24 @@
 10
 11    <!-- Android 13+ -->
 12    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
-12-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:6:5-75
-12-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:6:22-72
+12-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:6:5-75
+12-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:6:22-72
 13    <!-- Android 12 and below -->
 14    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-14-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:8:5-80
-14-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:8:22-77
+14-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:8:5-80
+14-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:8:22-77
 15    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-15-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:9:5-77
-15-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:9:22-74
+15-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:9:5-77
+15-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:9:22-74
 16    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
-16-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:10:5-91
-16-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:10:22-89
+16-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:10:5-91
+16-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:10:22-89
 17    <uses-permission android:name="android.permission.INTERNET" />
-17-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:11:5-67
-17-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:11:22-64
+17-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:11:5-67
+17-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:11:22-64
 18    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-18-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:12:5-71
-18-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:12:22-68
+18-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:12:5-71
+18-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:12:22-68
 19    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 19-->[com.google.android.exoplayer:exoplayer-core:2.19.1] C:\Users\LOKNATH GIRI\.gradle\caches\8.14.3\transforms\87518ca6ee8e8832351f60272ed25cfe\transformed\jetified-exoplayer-core-2.19.1\AndroidManifest.xml:24:5-79
 19-->[com.google.android.exoplayer:exoplayer-core:2.19.1] C:\Users\LOKNATH GIRI\.gradle\caches\8.14.3\transforms\87518ca6ee8e8832351f60272ed25cfe\transformed\jetified-exoplayer-core-2.19.1\AndroidManifest.xml:24:22-76
@@ -44,51 +44,51 @@
 25-->[androidx.core:core:1.13.0] C:\Users\LOKNATH GIRI\.gradle\caches\8.14.3\transforms\cfa36b0e3ec5e255a611cd2f51cf1cb0\transformed\core-1.13.0\AndroidManifest.xml:26:22-94
 26
 27    <application
-27-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:14:5-37:19
+27-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:14:5-37:19
 28        android:allowBackup="true"
-28-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:15:9-35
+28-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:15:9-35
 29        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
 29-->[androidx.core:core:1.13.0] C:\Users\LOKNATH GIRI\.gradle\caches\8.14.3\transforms\cfa36b0e3ec5e255a611cd2f51cf1cb0\transformed\core-1.13.0\AndroidManifest.xml:28:18-86
 30        android:dataExtractionRules="@xml/data_extraction_rules"
-30-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:16:9-65
+30-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:16:9-65
 31        android:debuggable="true"
 32        android:extractNativeLibs="true"
 33        android:fullBackupContent="@xml/backup_rules"
-33-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:17:9-54
+33-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:17:9-54
 34        android:icon="@mipmap/ic_launcher"
-34-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:18:9-43
+34-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:18:9-43
 35        android:label="@string/app_name"
-35-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:19:9-41
+35-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:19:9-41
 36        android:supportsRtl="true"
-36-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:20:9-35
+36-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:20:9-35
 37        android:theme="@style/Theme.MusicPlayer" >
-37-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:21:9-49
+37-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:21:9-49
 38        <service
-38-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:23:9-26:40
+38-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:23:9-26:40
 39            android:name="com.giriloknath4.musicplayer.PlayerService"
-39-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:24:13-42
+39-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:24:13-42
 40            android:exported="false"
-40-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:26:13-37
+40-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:26:13-37
 41            android:foregroundServiceType="mediaPlayback" />
-41-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:25:13-58
+41-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:25:13-58
 42
 43        <activity
-43-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:27:9-36:20
+43-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:27:9-36:20
 44            android:name="com.giriloknath4.musicplayer.MainActivity"
-44-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:28:13-41
+44-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:28:13-41
 45            android:exported="true"
-45-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:29:13-36
+45-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:29:13-36
 46            android:launchMode="singleTop" >
-46-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:30:13-43
+46-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:30:13-43
 47            <intent-filter>
-47-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:31:13-35:29
+47-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:31:13-35:29
 48                <action android:name="android.intent.action.MAIN" />
-48-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:32:17-69
-48-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:32:25-66
+48-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:32:17-69
+48-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:32:25-66
 49
 50                <category android:name="android.intent.category.LAUNCHER" />
-50-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:34:17-77
-50-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:34:27-74
+50-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:34:17-77
+50-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\src\main\AndroidManifest.xml:34:27-74
 51            </intent-filter>
 52        </activity>
 53

@@ -4,25 +4,6 @@
             "outputFile": "com.giriloknath4.musicplayer.app-mergeDebugResources-38:/values-night-v8/values-night-v8.xml",
             "map": [
                 {
-                    "source": "D:\\projects\\android\\Voice-Control-Music-Player\\MusicPlayer\\app\\src\\main\\res\\values-night\\themes.xml",
-                    "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "66",
-                        "endLines": "24",
-                        "endColumns": "12",
-                        "endOffsets": "1130"
-                    },
-                    "to": {
-                        "startLines": "35",
-                        "startColumns": "4",
-                        "startOffsets": "3575",
-                        "endLines": "57",
-                        "endColumns": "12",
-                        "endOffsets": "4465"
-                    }
-                },
-                {
                     "source": "C:\\Users\\LOKNATH GIRI\\.gradle\\caches\\8.14.3\\transforms\\f7fdd79c5e42b3e46088d1d6cd476aa4\\transformed\\appcompat-1.7.0\\res\\values-night-v8\\values-night-v8.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
@@ -54,6 +35,25 @@
                         "startOffsets": "687,762,873,962,1063,1170,1277,1376,1483,1586,1713,1801,1925,2027,2129,2245,2347,2461,2589,2705,2827,2963,3083,3217,3337,3449,4559,4676,4800,4930,5052,5190,5324,5440",
                         "endColumns": "74,110,88,100,106,106,98,106,102,126,87,123,101,101,115,101,113,127,115,121,135,119,133,119,111,125,116,123,129,121,137,133,115,119",
                         "endOffsets": "757,868,957,1058,1165,1272,1371,1478,1581,1708,1796,1920,2022,2124,2240,2342,2456,2584,2700,2822,2958,3078,3212,3332,3444,3570,4671,4795,4925,5047,5185,5319,5435,5555"
+                    }
+                },
+                {
+                    "source": "D:\\projects\\Android_java\\Voice-Control-Music-Player\\MusicPlayer\\app\\src\\main\\res\\values-night\\themes.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "66",
+                        "endLines": "24",
+                        "endColumns": "12",
+                        "endOffsets": "1130"
+                    },
+                    "to": {
+                        "startLines": "35",
+                        "startColumns": "4",
+                        "startOffsets": "3575",
+                        "endLines": "57",
+                        "endColumns": "12",
+                        "endOffsets": "4465"
                     }
                 }
             ]

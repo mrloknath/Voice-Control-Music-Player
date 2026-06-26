@@ -1,7 +1,7 @@
 com.giriloknath4.musicplayer.test.app-jetified-core-1.5.0-0 C:\Users\LOKNATH GIRI\.gradle\caches\8.14.3\transforms\512096e02f8d37c16ce75bfdf0c50e7d\transformed\jetified-core-1.5.0\res
 com.giriloknath4.musicplayer.test.app-jetified-annotation-experimental-1.4.0-1 C:\Users\LOKNATH GIRI\.gradle\caches\8.14.3\transforms\ef96acd667a9f4ca74b19cda141b3712\transformed\jetified-annotation-experimental-1.4.0\res
-com.giriloknath4.musicplayer.test.app-androidTest-2 D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\build\generated\res\resValues\androidTest\debug
-com.giriloknath4.musicplayer.test.app-updated_navigation_xml-3 D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\build\generated\updated_navigation_xml\debugAndroidTest
-com.giriloknath4.musicplayer.test.app-mergeDebugAndroidTestResources-4 D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\merged.dir
-com.giriloknath4.musicplayer.test.app-mergeDebugAndroidTestResources-5 D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\stripped.dir
-com.giriloknath4.musicplayer.test.app-debugAndroidTest-6 D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\build\intermediates\merged_res\debugAndroidTest\mergeDebugAndroidTestResources
+com.giriloknath4.musicplayer.test.app-androidTest-2 D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\build\generated\res\resValues\androidTest\debug
+com.giriloknath4.musicplayer.test.app-updated_navigation_xml-3 D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\build\generated\updated_navigation_xml\debugAndroidTest
+com.giriloknath4.musicplayer.test.app-mergeDebugAndroidTestResources-4 D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\merged.dir
+com.giriloknath4.musicplayer.test.app-mergeDebugAndroidTestResources-5 D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\stripped.dir
+com.giriloknath4.musicplayer.test.app-debugAndroidTest-6 D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\build\intermediates\merged_res\debugAndroidTest\mergeDebugAndroidTestResources

@@ -3,24 +3,24 @@
 3    package="com.giriloknath4.musicplayer.test" >
 4
 5    <uses-sdk
-5-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest2743134286692292348.xml:5:5-74
+5-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest12501830544708539425.xml:5:5-74
 6        android:minSdkVersion="21"
-6-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest2743134286692292348.xml:5:15-41
+6-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest12501830544708539425.xml:5:15-41
 7        android:targetSdkVersion="35" />
-7-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest2743134286692292348.xml:5:42-71
+7-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest12501830544708539425.xml:5:42-71
 8
 9    <instrumentation
-9-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest2743134286692292348.xml:11:5-15:78
+9-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest12501830544708539425.xml:11:5-15:78
 10        android:name="androidx.test.runner.AndroidJUnitRunner"
-10-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest2743134286692292348.xml:11:22-76
+10-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest12501830544708539425.xml:11:22-76
 11        android:functionalTest="false"
-11-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest2743134286692292348.xml:14:22-52
+11-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest12501830544708539425.xml:14:22-52
 12        android:handleProfiling="false"
-12-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest2743134286692292348.xml:13:22-53
+12-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest12501830544708539425.xml:13:22-53
 13        android:label="Tests for com.giriloknath4.musicplayer"
-13-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest2743134286692292348.xml:15:22-76
+13-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest12501830544708539425.xml:15:22-76
 14        android:targetPackage="com.giriloknath4.musicplayer" />
-14-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest2743134286692292348.xml:12:22-74
+14-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest12501830544708539425.xml:12:22-74
 15
 16    <uses-permission android:name="android.permission.REORDER_TASKS" />
 16-->[androidx.test:core:1.5.0] C:\Users\LOKNATH GIRI\.gradle\caches\8.14.3\transforms\512096e02f8d37c16ce75bfdf0c50e7d\transformed\jetified-core-1.5.0\AndroidManifest.xml:24:5-72
@@ -40,12 +40,12 @@
 22    </queries>
 23
 24    <application
-24-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest2743134286692292348.xml:7:5-9:19
+24-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest12501830544708539425.xml:7:5-9:19
 25        android:debuggable="true"
 26        android:extractNativeLibs="true" >
 27        <uses-library android:name="android.test.runner" />
-27-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest2743134286692292348.xml:8:9-60
-27-->D:\projects\android\Voice-Control-Music-Player\MusicPlayer\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest2743134286692292348.xml:8:23-57
+27-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest12501830544708539425.xml:8:9-60
+27-->D:\projects\Android_java\Voice-Control-Music-Player\MusicPlayer\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest12501830544708539425.xml:8:23-57
 28
 29        <activity
 29-->[androidx.test:core:1.5.0] C:\Users\LOKNATH GIRI\.gradle\caches\8.14.3\transforms\512096e02f8d37c16ce75bfdf0c50e7d\transformed\jetified-core-1.5.0\AndroidManifest.xml:27:9-34:20

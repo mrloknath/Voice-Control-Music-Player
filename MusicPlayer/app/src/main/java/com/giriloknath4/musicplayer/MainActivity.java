@@ -64,14 +64,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-import ai.picovoice.porcupine.PorcupineActivationException;
-import ai.picovoice.porcupine.PorcupineActivationLimitException;
-import ai.picovoice.porcupine.PorcupineActivationRefusedException;
-import ai.picovoice.porcupine.PorcupineActivationThrottledException;
-import ai.picovoice.porcupine.PorcupineException;
-import ai.picovoice.porcupine.PorcupineInvalidArgumentException;
-import ai.picovoice.porcupine.PorcupineManager;
-import ai.picovoice.porcupine.PorcupineManagerCallback;
+import java.io.IOException;
+import org.vosk.Model;
+import org.vosk.Recognizer;
+import org.vosk.android.StorageService;
+import org.vosk.android.SpeechService;
+import org.vosk.android.RecognitionListener;
 import de.hdodenhof.circleimageview.CircleImageView;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 
@@ -106,8 +104,8 @@ public class MainActivity extends AppCompatActivity {
     boolean isBound = false;
 
 //---------------------------------------wake up word detection and Speech recognizer---------------------------------------
-private static final String ACCESS_KEY = "RMrVGt9VecjKf+qDziomneZlkGP92Yxeospv/5iN6tC+eBHZ6r8VBA==";
-    private PorcupineManager porcupineManager = null;
+    private Model voskModel = null;
+    private SpeechService voskSpeechService = null;
     Button btnStart , btnStop;
     TextView textView;
     //--------------------------------------------Text to speech------------------------------------------------------
@@ -126,6 +124,7 @@ private static final String ACCESS_KEY = "RMrVGt9VecjKf+qDziomneZlkGP92Yxeospv/5
         initServiceBinding();
         initButtons();
         initTextToSpeech();
+        initVoskModel();
     }
 
     private void initStatusAndNavigationBar() {
@@ -278,18 +277,16 @@ private static final String ACCESS_KEY = "RMrVGt9VecjKf+qDziomneZlkGP92Yxeospv/5
             } else {
                 btnStart.setVisibility(View.GONE);
                 btnStop.setVisibility(View.VISIBLE);
-                startPorcupine();
+                startVosk();
                 Toast.makeText(this, "Start", Toast.LENGTH_SHORT).show();
             }
         });
 
         btnStop.setOnClickListener(v -> {
-            if (porcupineManager != null) {
-                btnStart.setVisibility(View.VISIBLE);
-                btnStop.setVisibility(View.GONE);
-                stopPorcupine();
-                Toast.makeText(this, "Stop", Toast.LENGTH_SHORT).show();
-            }
+            btnStart.setVisibility(View.VISIBLE);
+            btnStop.setVisibility(View.GONE);
+            stopVosk();
+            Toast.makeText(this, "Stop", Toast.LENGTH_SHORT).show();
         });
     }
     private void initTextToSpeech() {
@@ -337,6 +334,7 @@ private static final String ACCESS_KEY = "RMrVGt9VecjKf+qDziomneZlkGP92Yxeospv/5
     protected void onDestroy() {
         super.onDestroy();
         doUnbindService();
+        stopVosk();
     }
 
     private void doUnbindService() {
@@ -844,72 +842,111 @@ private static final String ACCESS_KEY = "RMrVGt9VecjKf+qDziomneZlkGP92Yxeospv/5
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == 111 && resultCode == RESULT_OK){
-            try {
-                //textView.setText(data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS).get(0));
-                PlayerCommandControl(data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS).get(0).toLowerCase());
-
-            }catch (NullPointerException e){
-                Toast.makeText(this, "Null Pointer Exception "+e, Toast.LENGTH_SHORT).show();
+        if (requestCode == 111) {
+            // Re-start Vosk if we are still in listening mode (Stop button visible)
+            if (btnStop.getVisibility() == View.VISIBLE) {
+                startVosk();
+            }
+            if (resultCode == RESULT_OK && data != null) {
+                try {
+                    PlayerCommandControl(data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS).get(0).toLowerCase());
+                } catch (NullPointerException e) {
+                    Toast.makeText(this, "Null Pointer Exception " + e, Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
 
     // -----------------------------wakeup word detection---------------
 
-    private void startPorcupine() {
-        try {
-            final String keywordName ="computer";
+    private void initVoskModel() {
+        StorageService.unpack(this, "model-en-us", "model",
+                model -> {
+                    voskModel = model;
+                    Toast.makeText(MainActivity.this, "Speech recognition model loaded", Toast.LENGTH_SHORT).show();
+                    // If start button is already clicked (or permission already active and btnStop is visible), start it
+                    if (btnStop.getVisibility() == View.VISIBLE && hasRecordPermission()) {
+                        startVosk();
+                    }
+                },
+                exception -> Toast.makeText(MainActivity.this, "Failed to unpack model: " + exception.getMessage(), Toast.LENGTH_LONG).show()
+        );
+    }
 
-            String keyword = keywordName.toLowerCase().replace(" ", "_") + ".ppn";
-            porcupineManager = new PorcupineManager.Builder()
-                    .setAccessKey(ACCESS_KEY)
-                    .setKeywordPath(keyword)
-                    .setSensitivity(0.7f)
-                    .build(getApplicationContext(), porcupineManagerCallback);
-            porcupineManager.start();
-        } catch (PorcupineInvalidArgumentException e) {
-            String s = String.format("%s\nEnsure your accessKey '%s' is a valid access key.", e.getMessage(), ACCESS_KEY) ;
-            Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
-        } catch (PorcupineActivationException e) {
-            Toast.makeText(this, "AccessKey activation error", Toast.LENGTH_SHORT).show();
-        } catch (PorcupineActivationLimitException e) {
-            Toast.makeText(this, "AccessKey reached its device limit", Toast.LENGTH_SHORT).show();
-        } catch (PorcupineActivationRefusedException e) {
-            Toast.makeText(this, "AccessKey refused", Toast.LENGTH_SHORT).show();
-        } catch (PorcupineActivationThrottledException e) {
-            Toast.makeText(this, "AccessKey has been throttled", Toast.LENGTH_SHORT).show();
-        } catch (PorcupineException e) {
-            Toast.makeText(this, "Failed to initialize Porcupine " + e.getMessage(), Toast.LENGTH_SHORT).show();
+    private void startVosk() {
+        if (voskModel == null) {
+            Toast.makeText(this, "Vosk model is still loading, please wait...", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (voskSpeechService != null) {
+            // Already running
+            return;
+        }
+
+        try {
+            // Restrict vocabulary to "computer" and unknown noise "[unk]" to act as KWS
+            String grammar = "[\"computer\", \"[unk]\"]";
+            Recognizer recognizer = new Recognizer(voskModel, 16000.0f, grammar);
+            voskSpeechService = new SpeechService(recognizer, 16000.0f);
+            voskSpeechService.startListening(voskListener);
+        } catch (IOException e) {
+            Toast.makeText(this, "Failed to start Vosk: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
+    private void stopVosk() {
+        if (voskSpeechService != null) {
+            voskSpeechService.stop();
+            voskSpeechService.shutdown();
+            voskSpeechService = null;
+        }
+    }
 
-    private void stopPorcupine() {
-        if (porcupineManager != null) {
-            try {
-                porcupineManager.stop();
-                porcupineManager.delete();
-            } catch (PorcupineException e) {
-                Toast.makeText(this, " Failed to stop Porcupine.", Toast.LENGTH_SHORT).show();
+    private final RecognitionListener voskListener = new RecognitionListener() {
+        @Override
+        public void onResult(String hypothesis) {
+            handleHypothesis(hypothesis);
+        }
+
+        @Override
+        public void onPartialResult(String hypothesis) {
+            handleHypothesis(hypothesis);
+        }
+
+        @Override
+        public void onFinalResult(String hypothesis) {
+            handleHypothesis(hypothesis);
+        }
+
+        @Override
+        public void onError(Exception exception) {
+            Toast.makeText(MainActivity.this, "Vosk Error: " + exception.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onTimeout() {
+            // Resume/restart listening if it times out
+            if (btnStop.getVisibility() == View.VISIBLE) {
+                stopVosk();
+                startVosk();
             }
         }
-    }
+    };
 
-    private final PorcupineManagerCallback porcupineManagerCallback = new PorcupineManagerCallback() {
-        @Override
-        public void invoke(int keywordIndex) {
+    private void handleHypothesis(String hypothesis) {
+        if (hypothesis != null && hypothesis.contains("\"computer\"")) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    // Toast.makeText(MainActivity.this, " Detected ", Toast.LENGTH_SHORT).show();
+                    // Pause Vosk to release the microphone for SpeechRecognizer dialog
+                    stopVosk();
                     text_to_speech("Listening");
                     SpeakNow();
                 }
             });
         }
-    };
-
+    }
 
     private boolean hasRecordPermission() {
         return ActivityCompat.checkSelfPermission(this, android.Manifest.permission.RECORD_AUDIO) ==
@@ -930,7 +967,7 @@ private static final String ACCESS_KEY = "RMrVGt9VecjKf+qDziomneZlkGP92Yxeospv/5
         if (grantResults.length == 0 || grantResults[0] == PackageManager.PERMISSION_DENIED) {
             Toast.makeText(this, "Microphone permission is required for this demo", Toast.LENGTH_SHORT).show();
         } else {
-            startPorcupine();
+            startVosk();
         }
     }
 
