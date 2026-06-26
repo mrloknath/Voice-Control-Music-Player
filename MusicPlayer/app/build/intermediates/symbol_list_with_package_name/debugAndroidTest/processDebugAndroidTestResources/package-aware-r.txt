@@ -1,3 +1,0 @@
-com.giriloknath4.musicplayer.test
-style WhiteBackgroundDialogTheme
-style WhiteBackgroundTheme

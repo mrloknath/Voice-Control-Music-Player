@@ -1,2 +1,0 @@
-com.giriloknath4.musicplayer.test:style/WhiteBackgroundTheme = 0x7f010001
-com.giriloknath4.musicplayer.test:style/WhiteBackgroundDialogTheme = 0x7f010000
