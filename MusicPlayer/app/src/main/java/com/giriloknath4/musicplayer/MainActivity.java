@@ -38,6 +38,7 @@ import android.os.IBinder;
 import android.provider.MediaStore;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -292,7 +293,26 @@ public class MainActivity extends AppCompatActivity {
     private void initTextToSpeech() {
         textToSpeech = new TextToSpeech(this, i -> {
             if (i != TextToSpeech.ERROR) {
-                textToSpeech.setLanguage(Locale.CHINESE);
+                textToSpeech.setLanguage(Locale.US);
+                textToSpeech.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+                    @Override
+                    public void onStart(String utteranceId) {
+                    }
+
+                    @Override
+                    public void onDone(String utteranceId) {
+                        if ("LISTENING_UTTERANCE".equals(utteranceId)) {
+                            runOnUiThread(() -> SpeakNow());
+                        }
+                    }
+
+                    @Override
+                    public void onError(String utteranceId) {
+                        if ("LISTENING_UTTERANCE".equals(utteranceId)) {
+                            runOnUiThread(() -> SpeakNow());
+                        }
+                    }
+                });
             }
         });
     }
@@ -941,8 +961,7 @@ public class MainActivity extends AppCompatActivity {
                 public void run() {
                     // Pause Vosk to release the microphone for SpeechRecognizer dialog
                     stopVosk();
-                    text_to_speech("Listening");
-                    SpeakNow();
+                    text_to_speech("Listening", "LISTENING_UTTERANCE");
                 }
             });
         }
@@ -972,7 +991,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void text_to_speech(String s){
-        textToSpeech.speak(s,TextToSpeech.QUEUE_FLUSH,null);
+        if (textToSpeech != null) {
+            textToSpeech.speak(s, TextToSpeech.QUEUE_FLUSH, null, null);
+        }
+    }
+
+    private void text_to_speech(String s, String utteranceId){
+        if (textToSpeech != null) {
+            int result = textToSpeech.speak(s, TextToSpeech.QUEUE_FLUSH, null, utteranceId);
+            if (result == TextToSpeech.ERROR) {
+                if ("LISTENING_UTTERANCE".equals(utteranceId)) {
+                    SpeakNow();
+                }
+            }
+        } else {
+            if ("LISTENING_UTTERANCE".equals(utteranceId)) {
+                SpeakNow();
+            }
+        }
     }
 
 }
