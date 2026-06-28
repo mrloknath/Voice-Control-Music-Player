@@ -47,6 +47,11 @@ public class PlayerService extends Service {
     }
 
     @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return START_STICKY;
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
         // assign variables
@@ -118,7 +123,10 @@ public class PlayerService extends Service {
     PlayerNotificationManager.MediaDescriptionAdapter descriptionAdapter = new PlayerNotificationManager.MediaDescriptionAdapter() {
         @Override
         public CharSequence getCurrentContentTitle(Player player) {
-            return Objects.requireNonNull(player.getCurrentMediaItem()).mediaMetadata.title;
+            if (player.getCurrentMediaItem() != null && player.getCurrentMediaItem().mediaMetadata.title != null) {
+                return player.getCurrentMediaItem().mediaMetadata.title;
+            }
+            return getResources().getString(R.string.app_name);
         }
 
         @RequiresApi(api = Build.VERSION_CODES.M)
@@ -134,15 +142,23 @@ public class PlayerService extends Service {
         @Nullable
         @Override
         public CharSequence getCurrentContentText(Player player) {
+            if (player.getCurrentMediaItem() != null && player.getCurrentMediaItem().mediaMetadata.artist != null) {
+                return player.getCurrentMediaItem().mediaMetadata.artist;
+            }
             return null;
         }
 
         @Nullable
         @Override
         public Bitmap getCurrentLargeIcon(Player player, PlayerNotificationManager.BitmapCallback callback) {
+            if (player.getCurrentMediaItem() == null || player.getCurrentMediaItem().mediaMetadata.artworkUri == null) {
+                BitmapDrawable defaultDrawable = (BitmapDrawable) ContextCompat.getDrawable(getApplicationContext(), R.drawable.default_artwork);
+                return defaultDrawable != null ? defaultDrawable.getBitmap() : null;
+            }
+
             // try creating an Image view on the fly then get its drawable
             ImageView view = new ImageView(getApplicationContext());
-            view.setImageURI(Objects.requireNonNull(player.getCurrentMediaItem()).mediaMetadata.artworkUri);
+            view.setImageURI(player.getCurrentMediaItem().mediaMetadata.artworkUri);
 
             // get view drawable
             BitmapDrawable bitmapDrawable = (BitmapDrawable) view.getDrawable();
@@ -150,8 +166,7 @@ public class PlayerService extends Service {
                 bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(getApplicationContext(),R.drawable.default_artwork);
             }
 
-            assert bitmapDrawable != null;
-            return bitmapDrawable.getBitmap();
+            return bitmapDrawable != null ? bitmapDrawable.getBitmap() : null;
         }
     };
 

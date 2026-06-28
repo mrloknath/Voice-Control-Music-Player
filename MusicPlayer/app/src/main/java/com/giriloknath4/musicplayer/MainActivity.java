@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
     SongAdapter songAdapter;
     List<Song> allSongs = new ArrayList<>();
     ActivityResultLauncher<String> storagePermissionLauncher;
+    ActivityResultLauncher<String> notificationPermissionLauncher;
     String permission = Manifest.permission.READ_EXTERNAL_STORAGE;
     //--------------------------------player activity----------------------------
     ExoPlayer player;
@@ -253,6 +254,17 @@ public class MainActivity extends AppCompatActivity {
         // 1. Decide permission based on Android version
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             permission = Manifest.permission.READ_MEDIA_AUDIO;
+
+            // Initialize notification permission launcher for Android 13+
+            notificationPermissionLauncher =
+                    registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
+                        // handled notification permission result
+                    });
+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            }
         } else {
             permission = Manifest.permission.READ_EXTERNAL_STORAGE;
         }
