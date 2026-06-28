@@ -23,6 +23,16 @@
            android:layout_height="?attr/actionBarSize"
            app:titleTextColor="@color/white"
            app:menu="@menu/search_btn"/>
+       <com.google.android.material.tabs.TabLayout
+           android:id="@+id/tabLayout"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           app:tabMode="scrollable"
+           app:tabGravity="fill"
+           app:tabTextColor="#B0FFFFFF"
+           app:tabSelectedTextColor="@color/white"
+           app:tabIndicatorColor="@color/white"
+           android:background="?android:attr/colorPrimary"/>
    </com.google.android.material.appbar.AppBarLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"

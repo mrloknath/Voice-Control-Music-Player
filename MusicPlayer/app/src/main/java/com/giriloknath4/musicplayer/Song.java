@@ -9,15 +9,21 @@ public class Song {
     Uri artworkUri;
     long size;
     int duration;
+    String audioType;
 
     //constructor
 
-    public Song(String title, Uri uri, Uri artworkUri, long size, int duration) {
+    public Song(String title, Uri uri, Uri artworkUri, long size, int duration, String audioType) {
         this.title = title;
         this.uri = uri;
         this.artworkUri = artworkUri;
         this.size = size;
         this.duration = duration;
+        this.audioType = audioType;
+    }
+
+    public Song(String title, Uri uri, Uri artworkUri, long size, int duration) {
+        this(title, uri, artworkUri, size, duration, "Songs");
     }
 
     //getters
@@ -42,6 +48,10 @@ public class Song {
         return duration;
     }
 
+    public String getAudioType() {
+        return audioType;
+    }
+
     //setters
 
     public void setTitle(String title) {
@@ -62,5 +72,9 @@ public class Song {
 
     public void setDuration(int duration) {
         this.duration=duration;
+    }
+
+    public void setAudioType(String audioType) {
+        this.audioType = audioType;
     }
 }

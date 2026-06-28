@@ -56,6 +56,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.tabs.TabLayout;
+
 //import com.chibde.visualizer.BarVisualizer;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
@@ -63,7 +65,9 @@ import com.google.android.exoplayer2.Player;
 import com.jgabrielfreitas.core.BlurImageView;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 //import java.util.Locale;
 import java.util.Locale;
 import java.util.Objects;
@@ -80,8 +84,11 @@ import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 public class MainActivity extends AppCompatActivity {
     // members
     RecyclerView recyclerView;
+    TabLayout tabLayout;
     SongAdapter songAdapter;
     List<Song> allSongs = new ArrayList<>();
+    String currentSelectedTab = "All";
+    String currentSearchQuery = "";
     ActivityResultLauncher<String> storagePermissionLauncher;
     ActivityResultLauncher<String> notificationPermissionLauncher;
     String permission = Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -214,6 +221,7 @@ public class MainActivity extends AppCompatActivity {
     private void initViews() {
 
         recyclerView = findViewById(R.id.recyclerview);
+        tabLayout = findViewById(R.id.tabLayout);
 
         playerView = findViewById(R.id.playerView);
         playerCloseBtn = findViewById(R.id.playerCloseBtn);
@@ -760,7 +768,13 @@ public class MainActivity extends AppCompatActivity {
                 MediaStore.Audio.Media.DISPLAY_NAME,
                 MediaStore.Audio.Media.DURATION,
                 MediaStore.Audio.Media.SIZE,
-                MediaStore.Audio.Media.ALBUM_ID
+                MediaStore.Audio.Media.ALBUM_ID,
+                MediaStore.Audio.Media.IS_MUSIC,
+                MediaStore.Audio.Media.IS_NOTIFICATION,
+                MediaStore.Audio.Media.IS_RINGTONE,
+                MediaStore.Audio.Media.IS_ALARM,
+                MediaStore.Audio.Media.IS_PODCAST,
+                MediaStore.Audio.Media.DATA
         };
 
         // ⭐ BEST FILTER → RETURNS ALL AUDIO FILES WITH SIZE > 0
@@ -784,6 +798,13 @@ public class MainActivity extends AppCompatActivity {
             int sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE);
             int albumIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID);
 
+            int isMusicCol = cursor.getColumnIndex(MediaStore.Audio.Media.IS_MUSIC);
+            int isNotifCol = cursor.getColumnIndex(MediaStore.Audio.Media.IS_NOTIFICATION);
+            int isRingCol = cursor.getColumnIndex(MediaStore.Audio.Media.IS_RINGTONE);
+            int isAlarmCol = cursor.getColumnIndex(MediaStore.Audio.Media.IS_ALARM);
+            int isPodcastCol = cursor.getColumnIndex(MediaStore.Audio.Media.IS_PODCAST);
+            int dataCol = cursor.getColumnIndex(MediaStore.Audio.Media.DATA);
+
             while (cursor.moveToNext()) {
 
                 long id = cursor.getLong(idColumn);
@@ -791,6 +812,13 @@ public class MainActivity extends AppCompatActivity {
                 int duration = cursor.getInt(durationColumn);
                 long size = cursor.getLong(sizeColumn);
                 long albumId = cursor.getLong(albumIdColumn);
+
+                int isMusic = isMusicCol != -1 ? cursor.getInt(isMusicCol) : 0;
+                int isNotif = isNotifCol != -1 ? cursor.getInt(isNotifCol) : 0;
+                int isRing = isRingCol != -1 ? cursor.getInt(isRingCol) : 0;
+                int isAlarm = isAlarmCol != -1 ? cursor.getInt(isAlarmCol) : 0;
+                int isPodcast = isPodcastCol != -1 ? cursor.getInt(isPodcastCol) : 0;
+                String filePath = dataCol != -1 ? cursor.getString(dataCol) : "";
 
                 // file Uri
                 Uri songUri = ContentUris.withAppendedId(
@@ -802,12 +830,31 @@ public class MainActivity extends AppCompatActivity {
                         Uri.parse("content://media/external/audio/albumart"), albumId
                 );
 
+                String rawName = name;
                 // Remove extension like .mp3 or .m4a safely
-                if (name.contains(".")) {
+                if (name != null && name.contains(".")) {
                     name = name.substring(0, name.lastIndexOf("."));
                 }
 
-                songs.add(new Song(name, songUri, artworkUri, size, duration));
+                String lowerPath = filePath != null ? filePath.toLowerCase() : "";
+                String lowerName = rawName != null ? rawName.toLowerCase() : "";
+
+                String audioType = "Songs";
+                if (lowerPath.contains("recording") || lowerPath.contains("recorder") || lowerPath.contains("callrec") || lowerPath.contains("voice") || lowerName.startsWith("rec_") || lowerName.contains("recording")) {
+                    audioType = "Recordings";
+                } else if (isNotif == 1 || lowerPath.contains("notification")) {
+                    audioType = "Notifications";
+                } else if (isAlarm == 1 || lowerPath.contains("alarm")) {
+                    audioType = "Alarms";
+                } else if (isRing == 1 || lowerPath.contains("ringtone")) {
+                    audioType = "Ringtones";
+                } else if (isPodcast == 1 || lowerPath.contains("podcast")) {
+                    audioType = "Podcasts";
+                } else if (isMusic == 1) {
+                    audioType = "Songs";
+                }
+
+                songs.add(new Song(name, songUri, artworkUri, size, duration, audioType));
             }
 
             showSongs(songs);
@@ -826,19 +873,15 @@ public class MainActivity extends AppCompatActivity {
         allSongs.clear();
         allSongs.addAll(songs);
 
-        //Update the tool bar title
-        String title = getResources().getString(R.string.app_name) + " ("+songs.size() +" Songs) ";
-        Objects.requireNonNull(getSupportActionBar()).setTitle(title);
+        //Setup dynamic tabs
+        setupDynamicTabs(songs);
 
         // layout manager
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
         //songs adapter
-        songAdapter = new SongAdapter(this,songs,player,playerView);
-
-        // set the adapter to recyclerview
-
+        songAdapter = new SongAdapter(this, songs, player, playerView);
 
         //recycler view animator methods
         ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(songAdapter);
@@ -846,6 +889,77 @@ public class MainActivity extends AppCompatActivity {
         scaleInAnimationAdapter.setInterpolator(new OvershootInterpolator());
         scaleInAnimationAdapter.setFirstOnly(false);
         recyclerView.setAdapter(scaleInAnimationAdapter);
+
+        applyCombinedFilters();
+    }
+
+    private void setupDynamicTabs(List<Song> songs) {
+        if (tabLayout == null) return;
+
+        Map<String, Integer> categoryCounts = new LinkedHashMap<>();
+        categoryCounts.put("All", songs.size());
+        categoryCounts.put("Songs", 0);
+        categoryCounts.put("Recordings", 0);
+        categoryCounts.put("Notifications", 0);
+        categoryCounts.put("Alarms", 0);
+        categoryCounts.put("Ringtones", 0);
+        categoryCounts.put("Podcasts", 0);
+
+        for (Song song : songs) {
+            String type = song.getAudioType();
+            if (categoryCounts.containsKey(type)) {
+                categoryCounts.put(type, categoryCounts.get(type) + 1);
+            } else {
+                categoryCounts.put(type, 1);
+            }
+        }
+
+        tabLayout.removeAllTabs();
+        tabLayout.clearOnTabSelectedListeners();
+
+        int selectedTabIndex = 0;
+        int index = 0;
+
+        for (Map.Entry<String, Integer> entry : categoryCounts.entrySet()) {
+            String category = entry.getKey();
+            int count = entry.getValue();
+
+            // Only add tab if it has songs or is "All"
+            if (count > 0 || category.equals("All")) {
+                TabLayout.Tab tab = tabLayout.newTab();
+                tab.setText(category + " (" + count + ")");
+                tab.setTag(category);
+                tabLayout.addTab(tab);
+
+                if (category.equalsIgnoreCase(currentSelectedTab)) {
+                    selectedTabIndex = index;
+                }
+                index++;
+            }
+        }
+
+        if (tabLayout.getTabCount() > selectedTabIndex) {
+            TabLayout.Tab tab = tabLayout.getTabAt(selectedTabIndex);
+            if (tab != null) {
+                tab.select();
+            }
+        }
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab.getTag() != null) {
+                    currentSelectedTab = (String) tab.getTag();
+                    applyCombinedFilters();
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {}
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {}
+        });
     }
 
     //setting the menu / search button
@@ -881,20 +995,32 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void filterSongs(String query) {
-    List<Song> filteredList = new ArrayList<>();
-
-    if(allSongs.size() >0){
-        for (Song song : allSongs){
-            if (song.getTitle().toLowerCase().contains(query)){
-                filteredList.add(song);
-            }
-        }
-
-        if (songAdapter != null){
-            songAdapter.filterSongs(filteredList);
-        }
+        currentSearchQuery = query;
+        applyCombinedFilters();
     }
 
+    private void applyCombinedFilters() {
+        List<Song> filteredList = new ArrayList<>();
+
+        if (allSongs.size() > 0) {
+            for (Song song : allSongs) {
+                boolean matchesTab = currentSelectedTab.equals("All") || song.getAudioType().equalsIgnoreCase(currentSelectedTab);
+                boolean matchesQuery = currentSearchQuery.isEmpty() || song.getTitle().toLowerCase().contains(currentSearchQuery.toLowerCase());
+
+                if (matchesTab && matchesQuery) {
+                    filteredList.add(song);
+                }
+            }
+
+            if (songAdapter != null) {
+                songAdapter.filterSongs(filteredList);
+            }
+
+            String title = getResources().getString(R.string.app_name) + " (" + filteredList.size() + " Songs)";
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setTitle(title);
+            }
+        }
     }
 
     //------------------------------control through command-----------------------------------
