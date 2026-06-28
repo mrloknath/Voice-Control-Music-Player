@@ -15,9 +15,9 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
 
-        <!-- Enable dark icons for status/nav bars -->
-        <item name="android:windowLightStatusBar">true</item>
-        <item name="android:windowLightNavigationBar">true</item>
+        <!-- Enable light (white) icons for status/nav bars -->
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
 
         <!--  Required for immersive full screen -->
         <item name="android:fitsSystemWindows">false</item>

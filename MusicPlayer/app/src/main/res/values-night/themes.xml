@@ -15,9 +15,9 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
 
-        <!-- Control status/nav bar icon color (true = dark icons) -->
-        <item name="android:windowLightStatusBar">true</item>
-        <item name="android:windowLightNavigationBar">true</item>
+        <!-- Control status/nav bar icon color (false = light icons) -->
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
 
         <!-- Required for immersive layouts -->
         <item name="android:fitsSystemWindows">false</item>

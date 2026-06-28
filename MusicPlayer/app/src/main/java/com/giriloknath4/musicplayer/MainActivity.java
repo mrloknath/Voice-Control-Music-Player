@@ -207,8 +207,8 @@ public class MainActivity extends AppCompatActivity {
 
         WindowInsetsControllerCompat controllerCompat =
                 new WindowInsetsControllerCompat(window, window.getDecorView());
-        controllerCompat.setAppearanceLightStatusBars(true);
-        controllerCompat.setAppearanceLightNavigationBars(true);
+        controllerCompat.setAppearanceLightStatusBars(false);
+        controllerCompat.setAppearanceLightNavigationBars(false);
     }
 
 
@@ -690,8 +690,8 @@ public class MainActivity extends AppCompatActivity {
 
                 // set color to player views
                 // status & navigation bar color
-                getWindow().setStatusBarColor(rbgColor);
-                getWindow().setNavigationBarColor(rbgColor);
+                getWindow().setStatusBarColor(Color.TRANSPARENT);
+                getWindow().setNavigationBarColor(Color.TRANSPARENT);
 
                 // more view colors
                 songNameView.setTextColor(titleTextColor);
@@ -717,8 +717,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void exitPlayerView() {
         playerView.setVisibility(View.GONE);
-        getWindow().setStatusBarColor(defaultStatusColor);
-        getWindow().setNavigationBarColor(ColorUtils.setAlphaComponent(defaultStatusColor,199));
+        getWindow().setStatusBarColor(Color.TRANSPARENT);
+        getWindow().setNavigationBarColor(Color.TRANSPARENT);
     }
 
 
