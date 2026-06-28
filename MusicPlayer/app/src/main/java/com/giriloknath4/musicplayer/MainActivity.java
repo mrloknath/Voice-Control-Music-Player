@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
     //wrappers
     ConstraintLayout homeControlWrapper, headWrapper, artworkWrapper, seekbarWrapper, controlWrapper;// audioVisualizerWrapper;
     // artwork
-    CircleImageView artworkView;
+    CircleImageView artworkView, homeArtworkView;
     //seek bar
     SeekBar seekbar;
     TextView progressView,durationView;
@@ -236,6 +236,7 @@ public class MainActivity extends AppCompatActivity {
         controlWrapper = findViewById(R.id.controlWrapper);
 
         artworkView = findViewById(R.id.artworkView);
+        homeArtworkView = findViewById(R.id.homeArtworkView);
         blurImageView = findViewById(R.id.blurImageView);
 
         seekbar = findViewById(R.id.seekbar);
@@ -356,6 +357,7 @@ public class MainActivity extends AppCompatActivity {
             storagePermissionLauncher.launch(permission);
             // call player control method
             playerControls();
+            syncPlayerUI();
         }
 
         @Override
@@ -382,6 +384,43 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         doUnbindService();
         stopVosk();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (isBound && player != null) {
+            syncPlayerUI();
+        }
+    }
+
+    private void syncPlayerUI() {
+        if (player == null || player.getCurrentMediaItem() == null) {
+            return;
+        }
+        com.google.android.exoplayer2.MediaItem mediaItem = player.getCurrentMediaItem();
+        if (mediaItem != null && mediaItem.mediaMetadata.title != null) {
+            songNameView.setText(mediaItem.mediaMetadata.title);
+            homeSongNameView.setText(mediaItem.mediaMetadata.title);
+        }
+        progressView.setText(getReadableTime((int) player.getCurrentPosition()));
+        durationView.setText(getReadableTime((int) player.getDuration()));
+        seekbar.setMax((int) player.getDuration());
+        seekbar.setProgress((int) player.getCurrentPosition());
+
+        if (player.isPlaying()) {
+            playPauseBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_pause_outline, 0, 0, 0);
+            homePlayPauseBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_pause, 0, 0, 0);
+            artworkView.startAnimation(loadRotation());
+        } else {
+            playPauseBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_play_outline, 0, 0, 0);
+            homePlayPauseBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_play, 0, 0, 0);
+            artworkView.clearAnimation();
+        }
+
+        showCurrentArtwork();
+        updatePlayerPositionProgress();
+        updatePlayerColors();
     }
 
     private void doUnbindService() {
@@ -578,10 +617,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showCurrentArtwork() {
-        artworkView.setImageURI(Objects.requireNonNull(player.getCurrentMediaItem()).mediaMetadata.artworkUri);
+        if (player != null && player.getCurrentMediaItem() != null && player.getCurrentMediaItem().mediaMetadata.artworkUri != null) {
+            artworkView.setImageURI(player.getCurrentMediaItem().mediaMetadata.artworkUri);
+            if (homeArtworkView != null) {
+                homeArtworkView.setImageURI(player.getCurrentMediaItem().mediaMetadata.artworkUri);
+            }
+        }
 
-        if (artworkView.getDrawable() ==null){
+        if (artworkView.getDrawable() == null){
             artworkView.setImageResource(R.drawable.default_artwork);
+        }
+        if (homeArtworkView != null && homeArtworkView.getDrawable() == null){
+            homeArtworkView.setImageResource(R.drawable.default_artwork);
         }
     }
 
