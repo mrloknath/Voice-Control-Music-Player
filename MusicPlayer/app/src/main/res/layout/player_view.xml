@@ -20,25 +20,27 @@
    <androidx.constraintlayout.widget.ConstraintLayout
        android:id="@+id/headWrapper"
        android:layout_width="match_parent"
-       android:layout_height="0dp"
+       android:layout_height="wrap_content"
+       android:minHeight="?attr/actionBarSize"
        app:layout_constraintTop_toTopOf="parent"
-       app:layout_constraintBottom_toBottomOf="parent"
-       app:layout_constraintHeight_percent="0.1"
-       app:layout_constraintVertical_bias="0"
        android:layout_marginEnd="@dimen/sm">
        <TextView
            android:id="@+id/playerCloseBtn"
            android:layout_width="wrap_content"
-           android:layout_height="match_parent"
+           android:layout_height="?attr/actionBarSize"
            app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toTopOf="parent"
+           app:layout_constraintBottom_toBottomOf="parent"
            app:drawableStartCompat="@drawable/ic_arrow_back"
            android:paddingHorizontal="@dimen/md"/>
        <TextView
            android:id="@+id/songNameView"
            android:layout_width="0dp"
-           android:layout_height="match_parent"
+           android:layout_height="?attr/actionBarSize"
            app:layout_constraintStart_toEndOf="@+id/playerCloseBtn"
            app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintTop_toTopOf="parent"
+           app:layout_constraintBottom_toBottomOf="parent"
            app:layout_constraintHorizontal_bias="0.1"
            android:text="Song name viewer"
            android:gravity="center_vertical"

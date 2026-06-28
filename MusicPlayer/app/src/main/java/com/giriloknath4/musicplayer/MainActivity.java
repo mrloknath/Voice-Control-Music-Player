@@ -13,6 +13,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -121,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
         initStatusAndNavigationBar();
         initToolbar();
         initViews();
+        setupWindowInsets();
         initPermissions();
         initServiceBinding();
         initButtons();
@@ -128,62 +132,73 @@ public class MainActivity extends AppCompatActivity {
         initVoskModel();
     }
 
-    private void initStatusAndNavigationBar() {
+    private void setupWindowInsets() {
+        View rootView = findViewById(android.R.id.content);
+        ViewCompat.setOnApplyWindowInsetsListener(rootView, (v, windowInsets) -> {
+            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
 
-        Window window = getWindow();
-        // -------------------------------
-        // ANDROID 11+ (R = API 30)
-        // -------------------------------
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-
-            // Make the content draw behind system bars
-            window.setDecorFitsSystemWindows(false);
-
-            // Transparent status bar
-            window.setStatusBarColor(Color.TRANSPARENT);
-
-            // Semi-transparent navigation bar (your logic preserved)
-            defaultStatusColor = window.getNavigationBarColor();
-            int navColor = ColorUtils.setAlphaComponent(defaultStatusColor, 199);
-            window.setNavigationBarColor(navColor);
-
-            // Control icons (light/dark)
-            WindowInsetsController controller = window.getInsetsController();
-            if (controller != null) {
-                controller.setSystemBarsAppearance(
-                        WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS |
-                                WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS,
-                        WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS |
-                                WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS
+            View appbar = findViewById(R.id.appbar);
+            if (appbar != null) {
+                appbar.setPadding(
+                        appbar.getPaddingLeft(),
+                        insets.top,
+                        appbar.getPaddingRight(),
+                        appbar.getPaddingBottom()
                 );
             }
 
-            return;
+            View homeControlWrapper = findViewById(R.id.homeControlWrapper);
+            if (homeControlWrapper != null) {
+                homeControlWrapper.setPadding(
+                        homeControlWrapper.getPaddingLeft(),
+                        homeControlWrapper.getPaddingTop(),
+                        homeControlWrapper.getPaddingRight(),
+                        insets.bottom
+                );
+            }
+
+            View headWrapper = findViewById(R.id.headWrapper);
+            if (headWrapper != null) {
+                headWrapper.setPadding(
+                        headWrapper.getPaddingLeft(),
+                        insets.top,
+                        headWrapper.getPaddingRight(),
+                        headWrapper.getPaddingBottom()
+                );
+            }
+
+            View commandLayout = findViewById(R.id.commandLayout);
+            if (commandLayout != null) {
+                commandLayout.setPadding(
+                        commandLayout.getPaddingLeft(),
+                        commandLayout.getPaddingTop(),
+                        commandLayout.getPaddingRight(),
+                        insets.bottom
+                );
+            }
+
+            return windowInsets;
+        });
+    }
+
+    private void initStatusAndNavigationBar() {
+        Window window = getWindow();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.setDecorFitsSystemWindows(false);
+        } else {
+            View decor = window.getDecorView();
+            decor.setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+            );
         }
 
-        // -------------------------------
-        // ANDROID 8 – ANDROID 10
-        // -------------------------------
-        View decor = window.getDecorView();
-
-        decor.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-        );
-
-        // Transparent status bar
         window.setStatusBarColor(Color.TRANSPARENT);
+        window.setNavigationBarColor(Color.TRANSPARENT);
 
-        // Semi-transparent navigation bar (your logic preserved)
-        defaultStatusColor = window.getNavigationBarColor();
-        int navColor = ColorUtils.setAlphaComponent(defaultStatusColor, 199);
-        window.setNavigationBarColor(navColor);
-
-        // Light/Dark icons using compat
         WindowInsetsControllerCompat controllerCompat =
-                new WindowInsetsControllerCompat(window, decor);
-
+                new WindowInsetsControllerCompat(window, window.getDecorView());
         controllerCompat.setAppearanceLightStatusBars(true);
         controllerCompat.setAppearanceLightNavigationBars(true);
     }
